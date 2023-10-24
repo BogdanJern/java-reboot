@@ -37,7 +37,7 @@ public class StatisticImpl implements Statistic {
     /**
      * Колучить количество строк в файле
      * @return количество строк
-     * @throws IOException 
+     * @throws IOException ошибка
      */
     public int getLineCount() throws IOException {
         int count; // счетчик строк
@@ -48,7 +48,7 @@ public class StatisticImpl implements Statistic {
     /**
      * получить количество пробелов
      * @return  количество пробелов
-     * @throws IOException
+     * @throws IOException ошибка
      */
     public int getSpaceCount() throws IOException {
         int count = 0,total;
@@ -66,7 +66,7 @@ public class StatisticImpl implements Statistic {
     /**
      * Получить саму блинную строку в файле
      * @return  самая длинная строка в файле
-     * @throws IOException
+     * @throws IOException ошибка
      */
     public String getLongestLine() throws IOException {
         String maxLine = "";

@@ -6,21 +6,15 @@ package ru.sberbank.edu;
  */
 public class FactorySaver {
     /**
-     * @param userChoose
+     * @param userChoose способ сохранения
      * @return Saver(SaverFile or SaverDB)
      */
     public static Saver getSaver( char userChoose ){
 
-        Saver saver;
-
-        switch (userChoose){
-            case 'F': saver = new SaverFile();
-            break;
-            case 'D': saver = new SaverDB();
-            break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + userChoose);
-        }
-        return saver;
+        return switch (userChoose) {
+            case 'F' -> new SaverFile();
+            case 'D' -> new SaverDB();
+            default -> throw new IllegalStateException("Unexpected value: " + userChoose);
+        };
     }
 }
