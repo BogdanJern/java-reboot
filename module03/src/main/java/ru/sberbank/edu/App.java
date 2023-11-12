@@ -1,8 +1,5 @@
 package ru.sberbank.edu;
 
-import java.util.ArrayList;
-import java.util.Scanner;
-
 /**
  * Hello world!
  *
@@ -12,23 +9,24 @@ public class App
     public static void main( String[] args )
     {
         CustomArrayImpl array = new CustomArrayImpl();
-        //System.out.println(array.isEmpty());
+        array.add("test0");
         array.add("test1");
-        array.add(2);
+        array.add("test2");
         array.add("test3");
-        //System.out.println(array.toString());
-        //array.size();
-        //System.out.println(array.size());
+        array.add("test4");
+        array.add("test6");
+        array.add("test7");
+        array.add("test8");
+        array.add("test9");
+        array.add("test10");
+        array.add("test11");
+        array.add("test12");
 
-        //String[] items = new String[2];
-        //items[0] = "test2";
-        //items[1] = "2";
-        //items.add("test3");
+        array.reverse();
+        int i = 0;
 
-        //array.addAll(items);
-        //System.out.println(array.toString());
-        //System.out.println(array.size());
-
-        System.out.println(array.get(1));
+        for (; i < array.size(); i++) {
+            System.out.println(array.get(i));
+        }
     }
 }

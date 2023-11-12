@@ -1,7 +1,4 @@
 package ru.sberbank.edu;
-import jdk.internal.util.ArraysSupport;
-
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
@@ -60,9 +57,7 @@ public class CustomArrayImpl<T> implements CustomArray<T> {
     private Object[] grow(int minCapacity) {
         int oldCapacity = elementData.length;
         if (oldCapacity > 0 || elementData != DEFAULTCAPACITY_EMPTY_ELEMENTDATA) {
-            int newCapacity = ArraysSupport.newLength(oldCapacity,
-                    minCapacity - oldCapacity, /* minimum growth */
-                    oldCapacity >> 1           /* preferred growth */);
+            int newCapacity = oldCapacity + 5;
             return elementData = Arrays.copyOf(elementData, newCapacity);
         } else {
             return elementData = new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
@@ -228,9 +223,9 @@ public class CustomArrayImpl<T> implements CustomArray<T> {
             for (; i < size; i++)
                 if (item.equals(es[i]))
                     break found;
-            return i;
+            return -1;
         }
-        return -1;
+        return i;
     }
 
     /**
@@ -261,9 +256,12 @@ public class CustomArrayImpl<T> implements CustomArray<T> {
      */
     @Override
     public void reverse() {
-
-
-
+        int i = 0;
+        Object[] ed = Arrays.copyOf(elementData, elementData.length);
+        int localSize = size - 1;
+        for (; i < size; i++){
+            elementData[i] = ed[localSize - i];
+        }
     }
 
     /**
