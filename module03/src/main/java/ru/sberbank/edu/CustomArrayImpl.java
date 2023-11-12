@@ -10,6 +10,8 @@ public class CustomArrayImpl<T> implements CustomArray<T> {
 
     private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};
 
+    private static final int DEFAULT_CAPACITY = 10;
+
     private int size, modCount;
     transient Object[] elementData;
 
@@ -18,6 +20,7 @@ public class CustomArrayImpl<T> implements CustomArray<T> {
     }
 
     /**
+     * Возвращает рзмер
      * @return
      */
     @Override
@@ -26,6 +29,7 @@ public class CustomArrayImpl<T> implements CustomArray<T> {
     }
 
     /**
+     * Проверка на пустоту
      * @return
      */
     @Override
@@ -35,7 +39,6 @@ public class CustomArrayImpl<T> implements CustomArray<T> {
 
     /**
      * Add single item.
-     *
      * @param item
      */
     @Override
@@ -48,6 +51,12 @@ public class CustomArrayImpl<T> implements CustomArray<T> {
         return true;
     }
 
+    /**
+     * Increases the capacity to ensure that it can hold at least the
+     * number of elements specified by the minimum capacity argument.
+     * @param minCapacity
+     * @return
+     */
     private Object[] grow(int minCapacity) {
         int oldCapacity = elementData.length;
         if (oldCapacity > 0 || elementData != DEFAULTCAPACITY_EMPTY_ELEMENTDATA) {
@@ -56,14 +65,13 @@ public class CustomArrayImpl<T> implements CustomArray<T> {
                     oldCapacity >> 1           /* preferred growth */);
             return elementData = Arrays.copyOf(elementData, newCapacity);
         } else {
-            return elementData = new Object[Math.max(10, minCapacity)];
+            return elementData = new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
         }
     }
 
 
     /**
      * Add all items.
-     *
      * @param items
      * @throws IllegalArgumentException if parameter items is null
      */
@@ -84,30 +92,18 @@ public class CustomArrayImpl<T> implements CustomArray<T> {
 
     /**
      * Add all items.
-     *
      * @param items
      * @throws IllegalArgumentException if parameter items is null
      */
     @Override
     public boolean addAll(Collection<T> items) {
         Object[] a = items.toArray();
-        //return addAll(a);
         modCount++;
-        int numNew = a.length;
-        if (numNew == 0)
-            return false;
-        Object[] elementData;
-        final int s;
-        if (numNew > (elementData = this.elementData).length - (s = size))
-            elementData = grow(s + numNew);
-        System.arraycopy(a, 0, elementData, s, numNew);
-        size = s + numNew;
-        return true;
+        return addAll((T[]) a);
     }
 
     /**
      * Add items to current place in array.
-     *
      * @param index - index
      * @param items - items for insert
      * @throws ArrayIndexOutOfBoundsException if index is out of bounds
@@ -115,7 +111,6 @@ public class CustomArrayImpl<T> implements CustomArray<T> {
      */
     @Override
     public boolean addAll(int index, T[] items) {
-        //Object[] a = items.toArray();
         modCount++;
         int numNew = items.length;
         if (numNew == 0)
@@ -137,7 +132,6 @@ public class CustomArrayImpl<T> implements CustomArray<T> {
 
     /**
      * Get item by index.
-     *
      * @param index - index
      * @throws ArrayIndexOutOfBoundsException if index is out of bounds
      */
@@ -154,7 +148,6 @@ public class CustomArrayImpl<T> implements CustomArray<T> {
 
     /**
      * Set item by index.
-     *
      * @param index - index
      * @param item
      * @return old value
@@ -162,6 +155,7 @@ public class CustomArrayImpl<T> implements CustomArray<T> {
      */
     @Override
     public T set(int index, T item) {
+        Objects.checkIndex(index, size);
         T oldValue = elementData(index);
         elementData[index] = item;
         return oldValue;
@@ -169,15 +163,14 @@ public class CustomArrayImpl<T> implements CustomArray<T> {
 
     /**
      * Remove item by index.
-     *
      * @param index - index
      * @throws ArrayIndexOutOfBoundsException if index is out of bounds
      */
     @Override
     public void remove(int index) {
+        Objects.checkIndex(index, size);
         final Object[] es = elementData;
-
-        //@SuppressWarnings("unchecked") T oldValue = (T) es[index];
+        @SuppressWarnings("unchecked") T oldValue = (T) es[index];
         fastRemove(es, index);
     }
 
@@ -217,7 +210,7 @@ public class CustomArrayImpl<T> implements CustomArray<T> {
      */
     @Override
     public boolean contains(T item) {
-        return false;
+        return indexOf(item) != -1;
     }
 
     /**
@@ -228,7 +221,16 @@ public class CustomArrayImpl<T> implements CustomArray<T> {
      */
     @Override
     public int indexOf(T item) {
-        return 0;
+        final Object[] es = elementData;
+        int i = 0;
+        found:
+        {
+            for (; i < size; i++)
+                if (item.equals(es[i]))
+                    break found;
+            return i;
+        }
+        return -1;
     }
 
     /**
@@ -251,7 +253,7 @@ public class CustomArrayImpl<T> implements CustomArray<T> {
      */
     @Override
     public int getCapacity() {
-        return 0;
+        return elementData.length;
     }
 
     /**
@@ -259,6 +261,8 @@ public class CustomArrayImpl<T> implements CustomArray<T> {
      */
     @Override
     public void reverse() {
+
+
 
     }
 
