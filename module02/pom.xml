@@ -5,6 +5,14 @@
         <groupId>ru.sberbank.edu</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
+    <dependencies>
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>RELEASE</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>module02</artifactId>
