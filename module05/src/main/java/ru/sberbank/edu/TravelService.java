@@ -3,6 +3,8 @@ package ru.sberbank.edu;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Math.*;
+
 /**
  * Travel Service.
  */
@@ -10,6 +12,10 @@ public class TravelService {
 
     // do not change type
     private final List<CityInfo> cities = new ArrayList<>();
+    /**
+     * Список названий городов
+     */
+    private final List<String> cityNames = new ArrayList<>();
 
     /**
      * Append city info.
@@ -18,7 +24,8 @@ public class TravelService {
      * @throws IllegalArgumentException if city already exists
      */
     public void add(CityInfo cityInfo) {
-        // do something
+        cities.add(cityInfo);
+        cityNames.add(cityInfo.getName());
     }
 
     /**
@@ -28,14 +35,34 @@ public class TravelService {
      * @throws IllegalArgumentException if city doesn't exist
      */
     public void remove(String cityName) {
-        // do something
+        CityInfo city = findCityByName(cityName);
+        if(city == null){
+            throw new IllegalArgumentException("Отсутствует город: " + cityName);
+        }
+        cityNames.remove(city.getName());
+        cities.remove(city);
+    }
+
+    /**
+     * Найти город по названию
+     * @param cityName Название города
+     * @return информация о найденном городе
+     */
+    private CityInfo findCityByName(String cityName){
+        int i = 0;
+        for(;i < cities.size(); i++){
+            if(cities.get(i).getName().equals(cityName)){
+                return cities.get(i);
+            }
+        }
+        return null;
     }
 
     /**
      * Get cities names.
      */
     public List<String> citiesNames() {
-        return null;
+        return cityNames;
     }
 
     /**
@@ -47,7 +74,28 @@ public class TravelService {
      * @throws IllegalArgumentException if source or destination city doesn't exist.
      */
     public int getDistance(String srcCityName, String destCityName) {
-        return 0;
+
+        CityInfo srcCity = findCityByName(srcCityName);
+        CityInfo destCity = findCityByName(destCityName);
+
+        double cosScrLatitude = cos(srcCity.getPosition().getLatitude());
+        double cosDestLatitude = cos(destCity.getPosition().getLatitude());
+
+        double sinScrLatitude = sin(srcCity.getPosition().getLatitude());
+        double sinDestLatitude = sin(destCity.getPosition().getLatitude());
+
+        double delta = destCity.getPosition().getLongitude() - srcCity.getPosition().getLongitude();
+        double cosDelta = cos(delta);
+        double sinDelta = sin(delta);
+
+        double y = sqrt((pow((cosScrLatitude * sinDelta),2)) + pow((cosScrLatitude * sinDestLatitude - sinScrLatitude * cosDestLatitude * cosDelta),2));
+
+        double x = sinScrLatitude * sinDestLatitude + cosScrLatitude * cosDestLatitude * cosDelta;
+        double atanDist = atan2(y,x);
+
+        double dist = atanDist * 6371;
+        return  (int) Math.round(dist);
+
     }
 
     /**
@@ -58,6 +106,19 @@ public class TravelService {
      * @throws IllegalArgumentException if city with cityName city doesn't exist.
      */
     public List<String> getCitiesNear(String cityName, int radius) {
-        return null;
+        List<String> names = new ArrayList<>();
+        CityInfo city = findCityByName(cityName);
+        if(city == null){
+            throw new IllegalArgumentException("Отсутствует город: " + cityName);
+        }
+        for (CityInfo cityInfo : cities) {
+            if (city.equals(cityInfo)) {
+                continue;//Если это один и тот же город, то расстояние не считаем
+            }
+            if (getDistance(city.getName(), cityInfo.getName()) <= radius) {
+                names.add(cityInfo.getName());
+            }
+        }
+        return names;
     }
 }

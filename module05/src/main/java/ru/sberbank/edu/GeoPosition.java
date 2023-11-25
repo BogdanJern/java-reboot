@@ -9,18 +9,17 @@ import static java.lang.Math.PI;
  * Geo position.
  */
 public class GeoPosition {
-
     /**
      * Широта в радианах.
      */
-    private double latitude;
+    private final double latitude;
 
     /**
      * Долгота в радианах.
      */
-    private double longitude;
+    private final double longitude;
 
-    private final String PATTERN = "^(-?)([0-9]{1,3})(\\(([0-6]{1,2})\'([0-9]{1,2})\'\'\\))?$";
+    private final String PATTERN = "^(-?)([0-9]{1,3})(\\(([0-9]{1,2})'([0-9]{1,2})''\\))?$";
 
     /**
      * Ctor.
@@ -30,31 +29,36 @@ public class GeoPosition {
      *                        Possible values: 55, 55(45'07''), 59(57'00'')
      */
     public GeoPosition(String latitudeGradus, String longitudeGradus) {
-
         latitude = gradus(latitudeGradus);
         longitude = gradus(longitudeGradus);
-
     }
 
     public double gradus(String gradus) {
-        double radGrad = 0.0, minutes = 0.0, seconds = 0.0;
+        double radGrad;
         Pattern regex = Pattern.compile(PATTERN);
         Matcher matcher = regex.matcher(gradus);
-        if (!matcher.find()) {
 
+        if(!matcher.find()){
+            throw new IllegalArgumentException("");
         }
 
-        radGrad = Double.parseDouble(matcher.group(2));
-        if(matcher.group(1) != ""){
+        String strSign = matcher.group(1);
+        String strGrad = matcher.group(2);
+        String strMinute = matcher.group(4);
+        String strSecond = matcher.group(5);
+
+        radGrad = Double.parseDouble(strGrad);
+
+        if(strSign.equals("-")){
             radGrad = radGrad * -1.0;
         }
         radGrad = radGrad * PI / 180;
 
-        if (matcher.group(4) != null && matcher.group(4) != "00" ){
-            radGrad = radGrad + ( Double.parseDouble(matcher.group(2)) * PI / 180 / 60.0 );
+        if (strMinute != null && !strMinute.equals("00") ){
+            radGrad = radGrad + ( Double.parseDouble(strMinute) * PI / 180 / 60.0 );
         }
-        if (matcher.group(5) != null && matcher.group(5) != "00" ){
-            radGrad = radGrad + ( Double.parseDouble(matcher.group(2)) * PI / 180 / 3600.0 );
+        if (strSecond != null && !strSecond.equals("00") ){
+            radGrad = radGrad + ( Double.parseDouble(strSecond) * PI / 180 / 3600.0 );
         }
         return radGrad;
     }
