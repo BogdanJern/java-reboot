@@ -15,6 +15,9 @@ public class CityInfo {
      * @param position - position
      */
     public CityInfo(String name, GeoPosition position) {
+        if (position == null){
+            throw new IllegalArgumentException("Данные местоположения пусты");
+        }
         this.name = name;
         this.position = position;
     }
