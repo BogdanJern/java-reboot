@@ -33,9 +33,6 @@ public class TravelService {
      */
     public void remove(String cityName) {
         CityInfo city = findCityByName(cityName);
-        if(city == null){
-            throw new IllegalArgumentException("Отсутствует город: " + cityName);
-        }
         cities.remove(city);
     }
 
