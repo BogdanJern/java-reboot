@@ -5,8 +5,8 @@ package ru.sberbank.edu;
  */
 public class CityInfo {
 
-    private String name;
-    private GeoPosition position;
+    private final String name;
+    private final GeoPosition position;
 
     /**
      * Ctor.
