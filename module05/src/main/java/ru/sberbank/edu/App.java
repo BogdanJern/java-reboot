@@ -19,6 +19,7 @@ public class App
         city = new CityInfo("Omsk", pos);
         System.out.println(city.toString());
         travelService.add(city);
+        System.out.println(travelService.citiesNames().toString());
 
         pos = new GeoPosition("68(58'00'')","33(05'00'')");
         city = new CityInfo("Murmansk", pos);
@@ -32,6 +33,7 @@ public class App
 
         System.out.println(travelService.getDistance("Kasimov","Murmansk"));
         System.out.println(travelService.getCitiesNear("Kasimov",1000).toString());
+
 
     }
 }

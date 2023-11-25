@@ -2,6 +2,8 @@ package ru.sberbank.edu;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import static java.lang.Math.*;
 
@@ -12,10 +14,6 @@ public class TravelService {
 
     // do not change type
     private final List<CityInfo> cities = new ArrayList<>();
-    /**
-     * Список названий городов
-     */
-    private final List<String> cityNames = new ArrayList<>();
 
     /**
      * Append city info.
@@ -25,7 +23,6 @@ public class TravelService {
      */
     public void add(CityInfo cityInfo) {
         cities.add(cityInfo);
-        cityNames.add(cityInfo.getName());
     }
 
     /**
@@ -39,7 +36,6 @@ public class TravelService {
         if(city == null){
             throw new IllegalArgumentException("Отсутствует город: " + cityName);
         }
-        cityNames.remove(city.getName());
         cities.remove(city);
     }
 
@@ -49,20 +45,14 @@ public class TravelService {
      * @return информация о найденном городе
      */
     private CityInfo findCityByName(String cityName){
-        int i = 0;
-        for(;i < cities.size(); i++){
-            if(cities.get(i).getName().equals(cityName)){
-                return cities.get(i);
-            }
-        }
-        return null;
+        return cities.stream().filter(city -> city.getName().equals(cityName)).findFirst().get();
     }
 
     /**
      * Get cities names.
      */
     public List<String> citiesNames() {
-        return cityNames;
+        return cities.stream().map(CityInfo::getName).toList();
     }
 
     /**
