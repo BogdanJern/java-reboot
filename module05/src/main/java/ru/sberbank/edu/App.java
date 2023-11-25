@@ -32,5 +32,6 @@ public class App
 
         System.out.println(travelService.getDistance("Kasimov","Murmansk"));
         System.out.println(travelService.getCitiesNear("Kasimov",1000).toString());
+
     }
 }
