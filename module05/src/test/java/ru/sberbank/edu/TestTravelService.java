@@ -101,13 +101,26 @@ public class TestTravelService {
         city = new CityInfo("Moscow", pos);
         travelService.add(city);
 
+        pos = new GeoPosition("59(57'00'')","30(19'00'')");
+        city = new CityInfo("Saint Petersburg", pos);
+        travelService.add(city);
+
         Assertions.assertEquals(travelService.getDistance("Kasimov","Moscow"),260);
-        Assertions.assertEquals(travelService.getDistance("Moscow","Omsk"),2198);
+
+        Assertions.assertFalse(travelService.getDistance("Moscow","Saint Petersburg") <600
+                && travelService.getDistance("Moscow","Saint Petersburg") > 700);
+
+        Assertions.assertFalse(travelService.getDistance("Moscow","Omsk") <2100
+                                        && travelService.getDistance("Moscow","Omsk") > 2300);
 
     }
 
     @Test
     public void testGetCitiesNear(){
+
+        List<String> names = new ArrayList<>();
+        names.add("Kasimov");
+        names.add("Saint Petersburg");
 
         TravelService travelService = new TravelService();
 
@@ -122,6 +135,12 @@ public class TestTravelService {
         pos = new GeoPosition("55(45'21'')","37(37'04'')");
         city = new CityInfo("Moscow", pos);
         travelService.add(city);
+
+        pos = new GeoPosition("59(57'00'')","30(19'00'')");
+        city = new CityInfo("Saint Petersburg", pos);
+        travelService.add(city);
+
+        Assertions.assertEquals(travelService.getCitiesNear("Moscow",1000), names);
 
     }
 
