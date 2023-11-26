@@ -34,7 +34,7 @@ public class GeoPosition {
     }
 
     public double gradus(String gradus) {
-        double radGrad, radMinute = 0.0, radSeconds = 0.0;
+        double radGrad;
         Pattern regex = Pattern.compile(PATTERN);
         Matcher matcher = regex.matcher(gradus);
 

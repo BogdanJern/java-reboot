@@ -2,8 +2,6 @@ package ru.sberbank.edu;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.stream.Stream;
 
 import static java.lang.Math.*;
 
@@ -54,7 +52,6 @@ public class TravelService {
 
     /**
      * Get distance in kilometers between two cities.
-     * https://www.kobzarev.com/programming/calculation-of-distances-between-cities-on-their-coordinates/
      *
      * @param srcCityName  - source city
      * @param destCityName - destination city
@@ -93,11 +90,10 @@ public class TravelService {
      * @throws IllegalArgumentException if city with cityName city doesn't exist.
      */
     public List<String> getCitiesNear(String cityName, int radius) {
+
         List<String> names = new ArrayList<>();
         CityInfo city = findCityByName(cityName);
-        if(city == null){
-            throw new IllegalArgumentException("Отсутствует город: " + cityName);
-        }
+
         for (CityInfo cityInfo : cities) {
             if (city.equals(cityInfo)) {
                 continue;//Если это один и тот же город, то расстояние не считаем
@@ -106,6 +102,7 @@ public class TravelService {
                 names.add(cityInfo.getName());
             }
         }
+
         return names;
     }
 }
