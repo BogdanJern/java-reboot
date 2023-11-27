@@ -40,7 +40,10 @@ public class TravelService {
      * @return информация о найденном городе
      */
     private CityInfo findCityByName(String cityName){
-        return cities.stream().filter(city -> city.getName().equals(cityName)).findFirst().get();
+        return cities.stream()
+                .filter(city -> city.getName().equals(cityName))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("No city exist"));
     }
 
     /**
@@ -91,18 +94,10 @@ public class TravelService {
      */
     public List<String> getCitiesNear(String cityName, int radius) {
 
-        List<String> names = new ArrayList<>();
-        CityInfo city = findCityByName(cityName);
-
-        for (CityInfo cityInfo : cities) {
-            if (city.equals(cityInfo)) {
-                continue;//Если это один и тот же город, то расстояние не считаем
-            }
-            if (getDistance(city.getName(), cityInfo.getName()) <= radius) {
-                names.add(cityInfo.getName());
-            }
-        }
-
-        return names;
+        return cities.stream()
+                .map(CityInfo::getName)
+                .filter(name -> !name.equals(cityName))
+                .filter(name -> this.getDistance(cityName, name) < radius)
+                .toList();
     }
 }
