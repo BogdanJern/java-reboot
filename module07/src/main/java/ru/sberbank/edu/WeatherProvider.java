@@ -1,8 +1,16 @@
 package ru.sberbank.edu;
 
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+
 public class WeatherProvider {
 
-    //    private RestTemplate restTemplate = null;
+    private static final String API_KEY = "70340e86c86d508b623dd9d9f495a714";
+
+    private RestTemplate restTemplate = new RestTemplate();
 
     /**
      * Download ACTUAL weather info from internet.
@@ -13,6 +21,15 @@ public class WeatherProvider {
      * @return weather info or null
      */
     public WeatherInfo get(String city) {
-        return null;
+        String url = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + API_KEY;
+        WeatherInfo weatherInfo = new WeatherInfo.Builder().build();
+        try {
+            weatherInfo = restTemplate.getForObject(new URI(url), WeatherInfo.class);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        } catch (HttpClientErrorException e) {
+            return null;
+        }
+        return weatherInfo;
     }
 }
