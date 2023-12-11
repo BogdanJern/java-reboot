@@ -8,21 +8,6 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class WeatherInfo {
 
-    private WeatherInfo(Builder builder) {
-        this.city = builder.city;
-        this.shortDescription = builder.shortDescription;
-        this.description = builder.description;
-        this.temperature = builder.temperature;
-        this.feelsLikeTemperature = builder.feelsLikeTemperature;
-        this.windSpeed = builder.windSpeed;
-        this.pressure = builder.pressure;
-        if (builder.expiryTime == null) {
-            this.expiryTime = LocalDateTime.now();
-        } else {
-            this.expiryTime = builder.expiryTime;
-        }
-    }
-
     @JsonProperty("name")
     private String city;
 
@@ -62,7 +47,7 @@ public class WeatherInfo {
      * Expiry time of weather info.
      * If current time is above expiry time then current weather info is not actual!
      */
-    private LocalDateTime expiryTime;
+    private final LocalDateTime expiryTime;
 
     @JsonProperty("main")
     private Main main;
@@ -72,15 +57,7 @@ public class WeatherInfo {
     private Wind wind;
 
     public WeatherInfo() {
-    }
-
-    public void setWeather(List<Weather> weather) {
-        this.shortDescription = weather.get(0).main;
-        this.description = weather.get(0).description;
-    }
-
-    public void setExpiryTime(LocalDateTime expiryTime) {
-        this.expiryTime = expiryTime;
+        this.expiryTime = LocalDateTime.now();
     }
 
     /**
@@ -161,6 +138,11 @@ public class WeatherInfo {
     @JsonGetter
     public LocalDateTime getExpiryTime() {
         return expiryTime;
+    }
+
+    public void setWeather(List<Weather> weather) {
+        this.shortDescription = weather.get(0).main;
+        this.description = weather.get(0).description;
     }
 
     @Override
@@ -311,126 +293,6 @@ public class WeatherInfo {
          */
         public void setSpeed(double speed) {
             WeatherInfo.this.windSpeed = speed;
-        }
-    }
-
-    /**
-     * The type Builder.
-     */
-    public static class Builder {
-
-        private String city;
-        private String shortDescription;
-        private String description;
-        private double temperature;
-        private double feelsLikeTemperature;
-        private double windSpeed;
-        private double pressure;
-        private LocalDateTime expiryTime;
-
-        /**
-         * Build weather info.
-         *
-         * @return the weather info
-         */
-        public WeatherInfo build() {
-            return new WeatherInfo(this);
-        }
-
-        /**
-         * Sets city.
-         *
-         * @param city the city
-         * @return the city
-         */
-        public Builder setCity(String city) {
-            this.city = city;
-
-            return this;
-        }
-
-        /**
-         * Sets short description.
-         *
-         * @param shortDescription the short description
-         * @return the short description
-         */
-        public Builder setShortDescription(String shortDescription) {
-            this.shortDescription = shortDescription;
-
-            return this;
-        }
-
-        /**
-         * Sets description.
-         *
-         * @param description the description
-         * @return the description
-         */
-        public Builder setDescription(String description) {
-            this.description = description;
-
-            return this;
-        }
-
-        /**
-         * Sets temperature.
-         *
-         * @param temperature the temperature
-         * @return the temperature
-         */
-        public Builder setTemperature(double temperature) {
-            this.temperature = temperature;
-
-            return this;
-        }
-
-        /**
-         * Sets feels like temperature.
-         *
-         * @param feelsLikeTemperature the feels like temperature
-         * @return the feels like temperature
-         */
-        public Builder setFeelsLikeTemperature(double feelsLikeTemperature) {
-            this.feelsLikeTemperature = feelsLikeTemperature;
-
-            return this;
-        }
-
-        /**
-         * Sets wind speed.
-         *
-         * @param windSpeed the wind speed
-         * @return the wind speed
-         */
-        public Builder setWindSpeed(double windSpeed) {
-            this.windSpeed = windSpeed;
-
-            return this;
-        }
-
-        /**
-         * Sets pressure.
-         *
-         * @param pressure the pressure
-         * @return the pressure
-         */
-        public Builder setPressure(double pressure) {
-            this.pressure = pressure;
-
-            return this;
-        }
-
-        /**
-         * Sets expiry time.
-         *
-         * @param expiryTime the expiry time
-         * @return the expiry time
-         */
-        public Builder setExpiryTime(LocalDateTime expiryTime) {
-            this.expiryTime = expiryTime;
-
-            return this;
         }
     }
 }
