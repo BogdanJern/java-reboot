@@ -5,8 +5,8 @@ package ru.sberbank.edu;
  */
 public class CityInfo {
 
-    private String name;
-    private GeoPosition position;
+    private final String name;
+    private final GeoPosition position;
 
     /**
      * Ctor.
@@ -15,7 +15,26 @@ public class CityInfo {
      * @param position - position
      */
     public CityInfo(String name, GeoPosition position) {
+        if (position == null){
+            throw new IllegalArgumentException("Данные местоположения пусты");
+        }
         this.name = name;
         this.position = position;
+    }
+
+    @Override
+    public String toString() {
+        return "CityInfo{" +
+                "name='" + name + '\'' +
+                ", position=" + position +
+                '}';
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public GeoPosition getPosition() {
+        return position;
     }
 }
