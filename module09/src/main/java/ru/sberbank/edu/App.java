@@ -11,12 +11,11 @@ public class App
 {
     public static void main( String[] args )
     {
-        ApplicationContext context = new AnnotationConfigApplicationContext("ru.sberbsnk.edu");
+        ApplicationContext context = new AnnotationConfigApplicationContext("ru.sberbank.edu");
 
         WeatherCache cache = context.getBean(WeatherCache.class);
 
         WeatherInfo weatherInfo = cache.getWeatherInfo("OMSK");
         System.out.println("GOOD! weather=" + weatherInfo);
-
     }
 }
