@@ -1,10 +1,5 @@
 package ru.sberbank.edu;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Properties;
-
 public class CalcInfo {
     /**
      * Сумма вклада
@@ -19,29 +14,26 @@ public class CalcInfo {
      */
     private final int years;
     /**
-     * Настройки
+     * Минимальная сумма
      */
-    Properties prop = new Properties();
-    public CalcInfo(Double sum, Double rate, int years) throws IOException {
-
-        this.prop.load(new FileInputStream("application.properties"));
-
-        int minSum =  Integer.parseInt(this.prop.getProperty("minSum"));
+    int minSum;
+    public CalcInfo(Double sum, Double rate, int years, int minSum) {
 
         this.sum = sum;
         this.rate = rate;
         this.years = years;
+        this.minSum = minSum;
 
-        if(this.sum < minSum){
-            throw new IllegalAccessError("Минимальная сумма на момент открытия вклада " + minSum + " рублей");
+        if(this.sum < this.minSum){
+            throw new IllegalAccessError("Минимальная сумма на момент открытия вклада " + this.minSum + " рублей");
         }
     }
 
     /**
      * Расчет суммы вклада
-     * @return
+     * @return итоговая сумма
      */
-    public Double getFinallSum(){
+    public Double getFinalSum(){
         return sum*Math.pow(1+rate/100,years);
     }
 }
