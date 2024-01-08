@@ -1,27 +1,24 @@
 package com.example.module11.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
-@Table(name = "users")
+@Table(name = "\"user\"")
 public class User {
 
     @Id
     @Column(name = "id")
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Integer id;
     @Column(name = "name")
     private String name;
     @Column(name = "age")
     private Integer age;
 
-    public User(int i, String oleg, int i1){
-
+    public User() {
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -33,7 +30,7 @@ public class User {
         return age;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
