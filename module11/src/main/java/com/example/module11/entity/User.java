@@ -17,7 +17,7 @@ public class User {
     @Column(name = "age")
     private Integer age;
 
-    public User(){
+    public User(int i, String oleg, int i1){
 
     }
 

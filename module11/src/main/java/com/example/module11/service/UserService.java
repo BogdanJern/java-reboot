@@ -9,4 +9,8 @@ import java.util.List;
 public class UserService {
     @Autowired
     UserRepository userRepository;
+
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
 }
