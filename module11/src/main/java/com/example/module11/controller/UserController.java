@@ -18,15 +18,18 @@ public class UserController {
     public UserService userService;
 
     @GetMapping(value = "/viewUsers")
-    public ModelAndView viewUsers() {
-        User user = new User(1, "Oleg", 11);
-        ModelAndView modelAndView = new ModelAndView();
-        List<User> users = userService.findAll();
+    public String viewUsers() {
+    //public ModelAndView viewUsers() {
+        //User user = new User(1, "Oleg", 11);
+        //ModelAndView modelAndView = new ModelAndView();
+        //List<User> users = userService.findAll();
 
 
-        users.add(user);
-        modelAndView.setViewName("view-users");
-        modelAndView.addObject("users", users);
-        return modelAndView;
+        //users.add(user);
+       // modelAndView.setViewName("allUser");
+        //modelAndView.addObject("users", users);
+        //return modelAndView;
+
+        return "allUser.html";
     }
 }
