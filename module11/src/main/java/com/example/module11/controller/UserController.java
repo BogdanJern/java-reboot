@@ -20,38 +20,73 @@ public class UserController {
     @Autowired
     UserRepository userRepository;
 
-    @GetMapping(value = "/viewAllUsers")
+    /**
+     * Отображение всех пользователей
+     * @param model
+     * @return
+     */
+    @GetMapping(value = "/allUsers")
     public String viewUsers(Model model) {
-        List<User> users =  userRepository.findAll();
+        //Получение всех пользователей
+        List<User> users = userRepository.findAll();
+
+        //Установка значений на страницу
         model.addAttribute("users", users);
 
         return "allUser.html";
     }
 
+    /**
+     * Добавление пользователя
+     * @param model
+     * @return
+     */
     @GetMapping(value = "/addUser")
     public String addUser(Model model) {
         return "addUser.html";
     }
+
+    /**
+     * Результат добавления пользователя
+     * @param name
+     * @param age
+     * @param model
+     * @return
+     */
     @PostMapping(value = "/addUser")
     public String addUser(@RequestParam(value = "name", required = true) String name,
                           @RequestParam(value = "age", required = true) Integer age,
                           Model model) {
 
+        //Добавление пользователя в базу
         User user = new User();
         user.setName(name);
         user.setAge(age);
         userRepository.save(user);
 
+        //Установка значений на страницу
         model.addAttribute("name", name);
         model.addAttribute("age", age);
 
-        return "newUser.html";
+        return "resultAdd.html";
     }
 
+    /**
+     * Удаление пользователя
+     * @param model
+     * @return
+     */
     @GetMapping(value = "/delUser")
     public String delUser(Model model) {
         return "delUser.html";
     }
+
+    /**
+     * Результат удаления пользователя
+     * @param id
+     * @param model
+     * @return
+     */
     @PostMapping(value = "/delUser")
     public String delUser(@RequestParam(value = "id", required = true) Integer id,
                           Model model) {
@@ -63,29 +98,55 @@ public class UserController {
         model.addAttribute("name", user.getName());
         model.addAttribute("age", user.getAge());
 
-        return "deletedUser.html";
+        return "resultDel.html";
     }
 
-    @GetMapping(value = "/changeUser")
+    /**
+     * Изменение пользователя
+     * @param model
+     * @return
+     */
+    @GetMapping(value = "/cngUser")
     public String changeUser(Model model) {
-        return "changeUser.html";
+        return "cngUser.html";
     }
 
-    @PostMapping(value = "/changeUser")
+    /**
+     * Результат изменения пользователя
+     * @param id
+     * @param name
+     * @param age
+     * @param model
+     * @return
+     */
+    @PostMapping(value = "/cngUser")
     public String changeUser(@RequestParam(value = "id", required = true) Integer id,
                              @RequestParam(value = "name", required = true) String name,
                              @RequestParam(value = "age", required = true) Integer age,
                              Model model) {
 
+        User user = new User();
+
+        //Получение объекта из базы
         Optional<User> optional = userRepository.findById(id);
-        User user = optional.get();
-            user.setName(name);
-            user.setAge(age);
-            userRepository.save(user);
+        user = optional.get();
 
-        model.addAttribute("name", user.getName());
-        model.addAttribute("age", user.getAge());
+        //Установка ID на страницу
+        model.addAttribute("id", user.getName());
 
-        return "changedUser.html";
+        //Установка старых значений на страницу
+        model.addAttribute("oldName", user.getName());
+        model.addAttribute("oldAge", user.getAge());
+
+        //Установка новых значений на страницу
+        model.addAttribute("newName", name);
+        model.addAttribute("newAge", age);
+
+        //Сохранение новых значений
+        user.setName(name);
+        user.setAge(age);
+        userRepository.save(user);
+
+        return "resultCng.html";
     }
 }
