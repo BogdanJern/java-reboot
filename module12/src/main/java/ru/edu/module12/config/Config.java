@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.sql.DataSource;
 
 @Configuration
-@EnableJpaRepositories(basePackages = "com.example.module12.repository")
+@EnableJpaRepositories(basePackages = "ru.edu.module12.repository")
 @EnableTransactionManagement
 public class Config {
     @Bean
