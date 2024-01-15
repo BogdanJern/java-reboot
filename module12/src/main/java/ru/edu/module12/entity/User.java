@@ -27,7 +27,7 @@ public class User {
     @Column(name = "age")
     private Integer age;
 
-    public User(Long id) {
+    public User() {
     }
 
     public User(Long id, String name, Integer age) {
