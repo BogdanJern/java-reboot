@@ -8,20 +8,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 import ru.edu.module12.entity.User;
-import ru.edu.module12.repository.UserRepository;
+import ru.edu.module12.service.UserService;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/user")
 public class UserController {
 
-    @Autowired
-    UserRepository userRepository;
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     /**
      * Отображение всех пользователей
@@ -30,8 +31,9 @@ public class UserController {
      */
     @GetMapping(value = "/all")
     public String viewAllUsers(Model model) {
+
         //Получение всех пользователей
-        List<User> users = userRepository.findAll();
+        List<User> users = userService.findAll();
 
         //Установка значений на страницу
         model.addAttribute("users", users);
@@ -57,20 +59,13 @@ public class UserController {
      * @return
      */
     @PostMapping(value = "/add")
-    public ModelAndView addUser(@RequestParam(value = "name", required = true) String name,
-                                @RequestParam(value = "age", required = true) Integer age,
+    public String addUser(@RequestParam(value = "name", required = true) String name,
+                                @RequestParam(value = "age", required = true) String age,
                                 Model model,
                                 HttpServletResponse response) throws IOException {
 
         //Добавление пользователя в базу
-        User user = new User();
-        user.setName(name);
-        user.setAge(age);
-        userRepository.save(user);
-
-        //Установка значений на страницу
-        model.addAttribute("name", name);
-        model.addAttribute("age", age);
+        userService.addUser(name, age);
 
         //Перенаправляем на всех пользователей
         response.sendRedirect("/user/all");
@@ -95,13 +90,18 @@ public class UserController {
      * @return
      */
     @PostMapping(value = "/del")
-    public String delUser(@RequestParam(value = "id", required = true) Long id,
+    public String delUser(@RequestParam(value = "id", required = true) String id,
                           Model model,
-                          HttpServletResponse response) {
+                          HttpServletResponse response) throws IOException {
 
-        Optional<User> optional = userRepository.findById(id);
-        User user = optional.get();
-        userRepository.delete(user);
+        User user;
+        try {
+            user = userService.delUser(id);
+        }catch (IllegalArgumentException e){
+            //Перенаправляем на страницу ошибки
+            model.addAttribute("message", e.getMessage());
+            return "error.html";
+        }
 
         model.addAttribute("name", user.getName());
         model.addAttribute("age", user.getAge());
@@ -128,32 +128,31 @@ public class UserController {
      * @return
      */
     @PostMapping(value = "/cng")
-    public String changeUser(@RequestParam(value = "id", required = true) Long id,
+    public String changeUser(@RequestParam(value = "id", required = true) String id,
                              @RequestParam(value = "name", required = true) String name,
-                             @RequestParam(value = "age", required = true) Integer age,
+                             @RequestParam(value = "age", required = true) String age,
                              Model model) {
 
-        User user = new User();
+        User oldUser;
 
-        //Получение объекта из базы
-        Optional<User> optional = userRepository.findById(id);
-        user = optional.get();
+        try {
+            oldUser = userService.changeUser(id, name, age);
+        } catch (IllegalArgumentException e){
+            //Перенаправляем на страницу ошибки
+            model.addAttribute("message", e.getMessage());
+            return "error.html";
+        }
 
         //Установка ID на страницу
-        model.addAttribute("id", user.getId());
+        model.addAttribute("id", oldUser.getId());
 
         //Установка старых значений на страницу
-        model.addAttribute("oldName", user.getName());
-        model.addAttribute("oldAge", user.getAge());
+        model.addAttribute("oldName", oldUser.getName());
+        model.addAttribute("oldAge", oldUser.getAge());
 
         //Установка новых значений на страницу
         model.addAttribute("newName", name);
         model.addAttribute("newAge", age);
-
-        //Сохранение новых значений
-        user.setName(name);
-        user.setAge(age);
-        userRepository.save(user);
 
         return "resultCng.html";
     }
