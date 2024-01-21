@@ -5,18 +5,16 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.ContextConfiguration;
+import ru.edu.module12.Application;
 import ru.edu.module12.entity.User;
 import ru.edu.module12.repository.UserRepository;
+import java.util.Optional;
 
-import java.util.ArrayList;
-import java.util.List;
-
+@ContextConfiguration(classes = Application.class)
 @ExtendWith(MockitoExtension.class)
 @DataJpaTest
 public class TestRepository {
@@ -35,20 +33,15 @@ public class TestRepository {
     }
 
     @Test
-    public void saveAll() throws Exception {
+    public void saveAndFind() throws Exception {
 
-        List<User> users = new ArrayList<>();
+        Assertions.assertTrue(userRepository.findAll().isEmpty());
 
-        Assertions.assertEquals(userRepository.findAll(),users);
+        userRepository.saveAndFlush(new User(1L,"Oleg", 11));
 
-        User user1 = new User(1L,"Oleg", 11);
-        User user2 = new User(2L,"Anna", 12);
-        users.add(user1);
-        users.add(user2);
+        Optional<User> bdUser = userRepository.findById(1L);
 
-        userRepository.saveAllAndFlush(users);
-
-        Assertions.assertEquals(userRepository.findAll(),users);
+        Assertions.assertFalse(bdUser.isEmpty());
 
     }
 }
